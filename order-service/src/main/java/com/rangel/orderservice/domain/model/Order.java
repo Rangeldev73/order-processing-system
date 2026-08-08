@@ -1,4 +1,5 @@
 package com.rangel.orderservice.domain.model;
+import com.rangel.orderservice.domain.exception.InvalidOrderException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -64,6 +65,15 @@ public class Order {
         if (this.status == null) {
             this.status = OrderStatus.CREATED;
         }
+    }
+
+    public static Order create(UUID customerId, List<OrderItem> items) {
+        if (items == null || items.isEmpty()) {
+            throw new InvalidOrderException("Order must contain at least one item");
+        }
+        Order order = Order.builder().customerId(customerId).build();
+        items.forEach(order::addItem);
+        return order;
     }
 
     public void addItem(OrderItem item) {
