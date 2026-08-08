@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: order-processing-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      ORDER_DB_NAME: ${ORDER_DB_NAME}
+      INVENTORY_DB_NAME: ${INVENTORY_DB_NAME}
+      PAYMENT_DB_NAME: ${PAYMENT_DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-multiple-db.sh:/docker-entrypoint-initdb.d/init-multiple-db.sh
+
+volumes:
+  postgres_data:
