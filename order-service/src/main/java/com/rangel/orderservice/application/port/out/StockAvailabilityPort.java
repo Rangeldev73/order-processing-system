@@ -1,4 +1,5 @@
 package com.rangel.orderservice.application.port.out;
 
-public class StockAvailabilityPort {
+public interface StockAvailabilityPort {
+    boolean isAvailable(String productId, int quantity);
 }
