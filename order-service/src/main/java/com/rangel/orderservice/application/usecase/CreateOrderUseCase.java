@@ -2,8 +2,10 @@ package com.rangel.orderservice.application.usecase;
 
 import com.rangel.orderservice.application.dto.command.CreateOrderCommand;
 import com.rangel.orderservice.application.port.in.CreateOrderInputPort;
+import com.rangel.orderservice.application.port.out.EventPublisherPort;
 import com.rangel.orderservice.application.port.out.OrderRepositoryPort;
 import com.rangel.orderservice.application.port.out.StockAvailabilityPort;
+import com.rangel.orderservice.domain.event.OrderCreatedEvent;
 import com.rangel.orderservice.domain.exception.InsufficientStockException;
 import com.rangel.orderservice.domain.model.Order;
 import com.rangel.orderservice.domain.model.OrderItem;
@@ -17,6 +19,7 @@ public class CreateOrderUseCase implements CreateOrderInputPort {
 
     private final OrderRepositoryPort orderRepositoryPort;
     private final StockAvailabilityPort stockAvailabilityPort;
+    private final EventPublisherPort eventPublisherPort;
 
     @Override
     public Order execute(CreateOrderCommand command) {
@@ -27,8 +30,18 @@ public class CreateOrderUseCase implements CreateOrderInputPort {
                 .toList();
 
         Order order = Order.create(command.customerId(), items);
+        Order savedOrder = orderRepositoryPort.save(order);
 
-        return orderRepositoryPort.save(order);
+        OrderCreatedEvent event = new OrderCreatedEvent(
+                savedOrder.getId(),
+                savedOrder.getCustomerId(),
+                savedOrder.getTotalAmount(),
+                savedOrder.getCreatedAt()
+        );
+
+        eventPublisherPort.publish(event);
+
+        return savedOrder;
     }
 
     private void validateStockAvailability(List<CreateOrderCommand.CreateOrderItemCommand> items) {

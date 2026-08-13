@@ -4,6 +4,7 @@ import com.rangel.orderservice.application.port.out.EventPublisherPort;
 import com.rangel.orderservice.config.RabbitMQConfig;
 import com.rangel.orderservice.domain.event.OrderCreatedEvent;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Component;
 
 @Component
 public class RabbitMQEventPublisher implements EventPublisherPort {
