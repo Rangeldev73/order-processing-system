@@ -14,5 +14,15 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/init-multiple-db.sh:/docker-entrypoint-initdb.d/init-multiple-db.sh
 
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: order-processing-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
 volumes:
   postgres_data:
