@@ -2,6 +2,7 @@ package com.rangel.orderservice.infrastructure.web.exception;
 
 import com.rangel.orderservice.domain.exception.InsufficientStockException;
 import com.rangel.orderservice.domain.exception.InvalidOrderException;
+import com.rangel.orderservice.domain.exception.OrderNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +27,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RestClientException.class)
     public ResponseEntity<Map<String, Object>> handleInventoryServiceUnavailable(RestClientException ex) {
         return buildResponse(HttpStatus.SERVICE_UNAVAILABLE, "Inventory service is currently unavailable");
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleOrderNotFound(OrderNotFoundException ex) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String message) {
