@@ -1,4 +1,9 @@
 package com.rangel.orderservice.domain.event;
 
-public record PaymentRejectedEvent() {
+import java.util.UUID;
+
+public record PaymentRejectedEvent(
+        UUID orderId,
+        String rejectionReason
+) {
 }
