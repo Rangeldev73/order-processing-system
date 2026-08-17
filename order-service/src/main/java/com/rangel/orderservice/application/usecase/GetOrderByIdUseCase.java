@@ -1,24 +1,24 @@
 package com.rangel.orderservice.application.usecase;
 
+
+import com.rangel.orderservice.application.port.in.GetOrderByIdInputPort;
 import com.rangel.orderservice.application.port.out.OrderRepositoryPort;
 import com.rangel.orderservice.domain.exception.OrderNotFoundException;
-import com.rangel.orderservice.domain.model.RejectionReason;
+import com.rangel.orderservice.domain.model.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class RejectOrderUseCase {
+public class GetOrderByIdUseCase implements GetOrderByIdInputPort {
 
     private final OrderRepositoryPort orderRepositoryPort;
 
-    public void execute(UUID orderId, RejectionReason rejectionReason) {
-        var order = orderRepositoryPort.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + orderId));
-
-        order.reject(rejectionReason);
-
-        orderRepositoryPort.save(order);
+    @Override
+    public Order execute(UUID id) {
+        return orderRepositoryPort.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
     }
 }
