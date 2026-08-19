@@ -1,6 +1,6 @@
 package com.rangel.orderservice.domain.model;
 
-public enum PaymentStatus {
+public enum OrderPaymentStatus {
     PENDING,
     APPROVED,
     REJECTED

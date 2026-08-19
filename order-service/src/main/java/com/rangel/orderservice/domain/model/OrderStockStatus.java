@@ -1,6 +1,6 @@
 package com.rangel.orderservice.domain.model;
 
-public enum StockStatus {
+public enum OrderStockStatus {
     PENDING,
     RESERVED,
     FAILED

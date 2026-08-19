@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,15 +47,28 @@ public class Order {
     private OrderStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStockStatus stockStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+        private OrderPaymentStatus paymentStatus;
+
+    @Enumerated(EnumType.STRING)
     private RejectionReason rejectionReason;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Version
+    private Long version;
+
     @Builder
     public Order(UUID customerId) {
         this.customerId = customerId;
         this.status = OrderStatus.CREATED;
+        this.stockStatus = OrderStockStatus.PENDING;
+        this.paymentStatus = OrderPaymentStatus.PENDING;
         this.totalAmount = BigDecimal.ZERO;
         this.items = new ArrayList<>();
     }
@@ -62,9 +76,6 @@ public class Order {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        if (this.status == null) {
-            this.status = OrderStatus.CREATED;
-        }
     }
 
     public static Order create(UUID customerId, List<OrderItem> items) {
@@ -98,12 +109,31 @@ public class Order {
         this.status = OrderStatus.AWAITING_PAYMENT;
     }
 
-    public void approve() {
-        this.status = OrderStatus.APPROVED;
+    public void markStockReserved() {
+        this.stockStatus = OrderStockStatus.RESERVED;
+        evaluateFinalStatus();
     }
 
-    public void reject(RejectionReason reason) {
+    public void markStockFailed() {
+        this.stockStatus = OrderStockStatus.FAILED;
         this.status = OrderStatus.REJECTED;
-        this.rejectionReason = reason;
+        this.rejectionReason = RejectionReason.INSUFFICIENT_STOCK;
+    }
+
+    public void markPaymentApproved() {
+        this.paymentStatus = OrderPaymentStatus.APPROVED;
+        evaluateFinalStatus();
+    }
+
+    public void markPaymentRejected() {
+        this.paymentStatus = OrderPaymentStatus.REJECTED;
+        this.status = OrderStatus.REJECTED;
+        this.rejectionReason = RejectionReason.PAYMENT_DECLINED;
+    }
+
+    private void evaluateFinalStatus() {
+        if (this.stockStatus == OrderStockStatus.RESERVED && this.paymentStatus == OrderPaymentStatus.APPROVED) {
+            this.status = OrderStatus.APPROVED;
+        }
     }
 }
