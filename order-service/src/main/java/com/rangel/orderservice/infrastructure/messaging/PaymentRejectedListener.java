@@ -20,6 +20,6 @@ public class PaymentRejectedListener {
     public void handlePaymentRejected(PaymentRejectedEvent event) {
         log.info("Received PaymentRejectedEvent for orderId: {}", event.orderId());
 
-        rejectOrderUseCase.execute(event.orderId(), RejectionReason.PAYMENT_DECLINED);
+        rejectOrderUseCase.execute(event.orderId());
     }
 }
