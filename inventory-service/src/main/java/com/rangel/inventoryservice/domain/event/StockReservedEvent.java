@@ -1,4 +1,7 @@
 package com.rangel.inventoryservice.domain.event;
 
-public class StockReservedEvent {
-}
+import java.util.UUID;
+
+public record StockReservedEvent(
+        UUID orderId
+){}

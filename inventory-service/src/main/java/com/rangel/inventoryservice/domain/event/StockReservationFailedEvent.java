@@ -1,4 +1,8 @@
 package com.rangel.inventoryservice.domain.event;
 
-public record StockReservationFailedEvent() {
-}
+import java.util.UUID;
+
+public record StockReservationFailedEvent(
+        UUID orderId,
+        String rejectionReason
+) {}
