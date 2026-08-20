@@ -18,4 +18,6 @@ public class StockRepositoryAdapter implements StockRepositoryPort {
         return stockJpaRepository.findByProductId(productId);
     }
 
+    @Override
+    public Stock save(Stock stock){return stockJpaRepository.save(stock);}
 }

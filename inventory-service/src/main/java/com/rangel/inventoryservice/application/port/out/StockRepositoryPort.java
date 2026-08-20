@@ -5,4 +5,5 @@ import java.util.Optional;
 
 public interface StockRepositoryPort {
     Optional<Stock> findByProductId(String productId);
+    Stock save(Stock stock);
 }
