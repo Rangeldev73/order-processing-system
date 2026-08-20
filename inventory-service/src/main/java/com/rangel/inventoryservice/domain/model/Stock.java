@@ -1,5 +1,6 @@
 package com.rangel.inventoryservice.domain.model;
 
+import com.rangel.inventoryservice.domain.exception.InsufficientStockException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,5 +37,12 @@ public class Stock {
 
     public boolean hasAvailableQuantity(int requestedQuantity) {
         return this.availableQuantity != null && this.availableQuantity >= requestedQuantity;
+    }
+
+    public void reserve(int quantity) {
+        if (!hasAvailableQuantity(quantity)) {
+            throw new InsufficientStockException(productId);
+        }
+        this.availableQuantity -= quantity;
     }
 }
