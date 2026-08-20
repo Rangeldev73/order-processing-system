@@ -32,11 +32,16 @@ public class CreateOrderUseCase implements CreateOrderInputPort {
         Order order = Order.create(command.customerId(), items);
         Order savedOrder = orderRepositoryPort.save(order);
 
+        List<OrderCreatedEvent.OrderItemPayload> eventItems = savedOrder.getItems().stream()
+                .map(item -> new OrderCreatedEvent.OrderItemPayload(item.getProductId(), item.getQuantity()))
+                .toList();
+
         OrderCreatedEvent event = new OrderCreatedEvent(
                 savedOrder.getId(),
                 savedOrder.getCustomerId(),
                 savedOrder.getTotalAmount(),
-                savedOrder.getCreatedAt()
+                savedOrder.getCreatedAt(),
+                eventItems
         );
 
         eventPublisherPort.publish(event);

@@ -1,4 +1,4 @@
-package com.rangel.orderservice.domain.event;
+package com.rangel.inventoryservice.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
