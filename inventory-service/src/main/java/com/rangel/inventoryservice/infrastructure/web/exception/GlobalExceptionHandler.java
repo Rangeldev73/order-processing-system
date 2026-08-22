@@ -1,5 +1,6 @@
 package com.rangel.inventoryservice.infrastructure.web.exception;
 
+import com.rangel.inventoryservice.domain.exception.InsufficientStockException;
 import com.rangel.inventoryservice.domain.exception.StockNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,16 @@ public class GlobalExceptionHandler {
                 "timestamp", LocalDateTime.now(),
                 "status", HttpStatus.NOT_FOUND.value(),
                 "error", "Not Found",
+                "message", ex.getMessage()
+        ));
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<Map<String, Object>> handleInsufficientStock(InsufficientStockException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of(
+                "timestamp", LocalDateTime.now(),
+                "status", HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "error", "Unprocessable Entity",
                 "message", ex.getMessage()
         ));
     }
