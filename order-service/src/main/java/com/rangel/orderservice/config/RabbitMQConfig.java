@@ -14,8 +14,12 @@ public class RabbitMQConfig {
 
     public static final String ORDER_EVENTS_EXCHANGE = "order.events";
     public static final String PAYMENT_EVENTS_EXCHANGE = "payment.events";
+    public static final String STOCK_EVENTS_EXCHANGE = "stock.events";
+
     public static final String PAYMENT_APPROVED_QUEUE = "order-service.payment-approved-queue";
     public static final String PAYMENT_REJECTED_QUEUE = "order-service.payment-rejected-queue";
+    public static final String STOCK_RESERVED_QUEUE = "order-service.stock-reserved-queue";
+    public static final String STOCK_FAILED_QUEUE = "order-service.stock-failed-queue";
 
     @Bean
     public TopicExchange orderEventsExchange() {
@@ -50,5 +54,30 @@ public class RabbitMQConfig {
     @Bean
     public Binding paymentRejectedBinding(Queue paymentRejectedQueue, TopicExchange paymentEventsExchange) {
         return BindingBuilder.bind(paymentRejectedQueue).to(paymentEventsExchange).with("payment.rejected");
+    }
+
+    @Bean
+    public TopicExchange stockEventsExchange() {
+        return new TopicExchange(STOCK_EVENTS_EXCHANGE);
+    }
+
+    @Bean
+    public Queue stockReservedQueue() {
+        return new Queue(STOCK_RESERVED_QUEUE, true);
+    }
+
+    @Bean
+    public Queue stockFailedQueue() {
+        return new Queue(STOCK_FAILED_QUEUE, true);
+    }
+
+    @Bean
+    public Binding stockReservedBinding(Queue stockReservedQueue, TopicExchange stockEventsExchange) {
+        return BindingBuilder.bind(stockReservedQueue).to(stockEventsExchange).with("stock.reserved");
+    }
+
+    @Bean
+    public Binding stockFailedBinding(Queue stockFailedQueue, TopicExchange stockEventsExchange) {
+        return BindingBuilder.bind(stockFailedQueue).to(stockEventsExchange).with("stock.reservation-failed");
     }
 }
