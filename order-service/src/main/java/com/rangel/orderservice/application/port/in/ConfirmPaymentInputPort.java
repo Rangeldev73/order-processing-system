@@ -1,4 +1,7 @@
 package com.rangel.orderservice.application.port.in;
 
-public class ConfirmPaymentInputPort {
+import java.util.UUID;
+
+public interface ConfirmPaymentInputPort {
+    void execute(UUID orderId);
 }

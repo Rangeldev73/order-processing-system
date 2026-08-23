@@ -1,4 +1,5 @@
 package com.rangel.orderservice.domain.event;
 
-public record StockReservedEvent() {
-}
+import java.util.UUID;
+
+public record StockReservedEvent(UUID orderId) {}
