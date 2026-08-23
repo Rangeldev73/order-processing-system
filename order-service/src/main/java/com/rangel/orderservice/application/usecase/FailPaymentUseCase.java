@@ -1,8 +1,8 @@
 package com.rangel.orderservice.application.usecase;
 
+import com.rangel.orderservice.application.port.in.FailPaymentInputPort;
 import com.rangel.orderservice.application.port.out.OrderRepositoryPort;
 import com.rangel.orderservice.domain.exception.OrderNotFoundException;
-import com.rangel.orderservice.domain.model.RejectionReason;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
@@ -12,10 +12,11 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class RejectOrderUseCase {
+public class FailPaymentUseCase implements FailPaymentInputPort {
 
     private final OrderRepositoryPort orderRepositoryPort;
 
+    @Override
     @Retryable(
             retryFor = OptimisticLockingFailureException.class,
             maxAttempts = 3,

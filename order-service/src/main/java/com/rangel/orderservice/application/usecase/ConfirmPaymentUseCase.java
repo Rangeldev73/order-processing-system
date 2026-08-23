@@ -1,5 +1,6 @@
 package com.rangel.orderservice.application.usecase;
 
+import com.rangel.orderservice.application.port.in.ConfirmPaymentInputPort;
 import com.rangel.orderservice.application.port.out.OrderRepositoryPort;
 import com.rangel.orderservice.domain.exception.OrderNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,11 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class ApproveOrderUseCase {
+public class ConfirmPaymentUseCase implements ConfirmPaymentInputPort {
 
     private final OrderRepositoryPort orderRepositoryPort;
 
+    @Override
     @Retryable(
             retryFor = OptimisticLockingFailureException.class,
             maxAttempts = 3,
