@@ -15,7 +15,7 @@ public class OrderCreatedListener {
 
     private final ReserveStockInputPort reserveStockInputPort;
 
-    @RabbitListener(queues = RabbitMQConfig.ORDER_CREATED_QUEUE)
+    @RabbitListener(queues = RabbitMQConfig.ORDER_CREATED_QUEUE, containerFactory = "rabbitListenerContainerFactory")
     public void handleOrderCreated(OrderCreatedEvent event) {
         log.info("Received OrderCreatedEvent for orderId: {}", event.orderId());
         reserveStockInputPort.execute(event);
