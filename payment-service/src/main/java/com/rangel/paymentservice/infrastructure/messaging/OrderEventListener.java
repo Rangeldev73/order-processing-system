@@ -1,6 +1,6 @@
 package com.rangel.paymentservice.infrastructure.messaging;
 
-import com.rangel.paymentservice.application.usecase.ProcessPaymentUseCase;
+import com.rangel.paymentservice.application.port.in.ProcessPaymentInputPort;
 import com.rangel.paymentservice.domain.event.OrderCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +13,12 @@ import static com.rangel.paymentservice.config.RabbitMQConfig.QUEUE_NAME;
 @Slf4j
 public class OrderEventListener {
 
-    private final ProcessPaymentUseCase processPaymentUseCase;
+    private final ProcessPaymentInputPort processPaymentInputPort;
 
-    @RabbitListener(queues = QUEUE_NAME)
+    @RabbitListener(queues = QUEUE_NAME, containerFactory = "rabbitListenerContainerFactory")
     public void handleOrderCreated(OrderCreatedEvent event) {
         log.info("Received OrderCreatedEvent for orderId: {}", event.orderId());
-
-        processPaymentUseCase.execute(
+        processPaymentInputPort.execute(
                 event.orderId(),
                 event.customerId(),
                 event.totalAmount()
