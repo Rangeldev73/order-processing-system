@@ -15,7 +15,7 @@ public class StockReservationFailedListener {
 
     private final FailStockReservationInputPort failStockReservationInputPort;
 
-    @RabbitListener(queues = RabbitMQConfig.STOCK_FAILED_QUEUE)
+    @RabbitListener(queues = RabbitMQConfig.STOCK_FAILED_QUEUE, containerFactory = "stockFailedContainerFactory")
     public void handleStockFailed(StockReservationFailedEvent event) {
         log.info("Received StockReservationFailedEvent for orderId: {}, reason: {}", event.orderId(), event.rejectionReason());
         failStockReservationInputPort.execute(event.orderId());

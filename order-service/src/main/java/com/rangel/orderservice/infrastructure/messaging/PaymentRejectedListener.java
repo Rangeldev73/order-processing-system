@@ -15,7 +15,7 @@ public class PaymentRejectedListener {
 
     private final FailPaymentInputPort failPaymentInputPort;
 
-    @RabbitListener(queues = PAYMENT_REJECTED_QUEUE)
+    @RabbitListener(queues = PAYMENT_REJECTED_QUEUE, containerFactory = "paymentRejectedContainerFactory")
     public void handlePaymentRejected(PaymentRejectedEvent event) {
         log.info("Received PaymentRejectedEvent for orderId: {}", event.orderId());
 

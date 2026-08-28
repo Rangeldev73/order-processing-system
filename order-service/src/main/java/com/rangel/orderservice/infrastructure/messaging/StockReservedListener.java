@@ -15,7 +15,7 @@ public class StockReservedListener {
 
     private final ConfirmStockReservationInputPort confirmStockReservationInputPort;
 
-    @RabbitListener(queues = RabbitMQConfig.STOCK_RESERVED_QUEUE)
+    @RabbitListener(queues = RabbitMQConfig.STOCK_RESERVED_QUEUE, containerFactory = "stockReservedContainerFactory")
     public void handleStockReserved(StockReservedEvent event) {
         log.info("Received StockReservedEvent for orderId: {}", event.orderId());
         confirmStockReservationInputPort.execute(event.orderId());

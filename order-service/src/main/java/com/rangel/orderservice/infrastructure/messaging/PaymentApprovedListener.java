@@ -15,7 +15,7 @@ public class PaymentApprovedListener {
 
     private final ConfirmPaymentInputPort confirmPaymentInputPort;
 
-    @RabbitListener(queues = PAYMENT_APPROVED_QUEUE)
+    @RabbitListener(queues = PAYMENT_APPROVED_QUEUE, containerFactory = "paymentApprovedContainerFactory")
     public void handlePaymentApproved(PaymentApprovedEvent event) {
         log.info("Received PaymentApprovedEvent for orderId: {}", event.orderId());
         confirmPaymentInputPort.execute(event.orderId());
